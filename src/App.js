@@ -1,58 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
-function App() {
-  const [resourceType, setResourceType] = useState("posts");
-
-  const [items, setItems] = useState([])
+export default function App() {
+  const [number, setNumber] = useState(0);
+  const [dark, setDark] = useState(false);
+  const doubleNumber = useMemo(() => {
+    return slowFunction(number);
+  }, [number]); // having dependencies, just like useEffect
+  
+  const themeStyles = useMemo(() => {
+    return {
+      backgroundColor: dark ? "black" : "white",
+      color: dark ? "white" : "black",
+    };
+  }, [dark]) 
 
   useEffect(() => {
-    console.log('resource changed')
-
-    return () => { // clean up function
-      console.log('return from resource change')
-    }
-  }, [resourceType])
-
-  // # render new window size
-  // const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  // const handleResize = () => {
-  //   setWindowWidth(window.innerWidth)
-  // }    
-  // useEffect(() => {
-  //   window.addEventListener('resize', handleResize)
-
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize)
-  //   }
-  // }, [])
-  
-
-
-  // # render data from API with useEffect 
-  // useEffect(() => {
-  //   fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
-  //     .then((response) => response.json())
-  //     .then((json) => setItems(json));
-  // }, [resourceType]);
+    console.log("theme changed");
+  }, [themeStyles])
 
   return (
     <>
-      <div>
-        <button onClick={() => setResourceType("posts")}>Posts</button>
-        <button onClick={() => setResourceType("users")}>Users</button>
-        <button onClick={() => setResourceType("comments")}>Comments</button>
-      </div>
-      <h1>{resourceType}</h1>
-
-      {/* {items.map(item => {
-        return <pre>{JSON.stringify(item)}</pre>
-      })} */}
-
-      {/* <div>
-        {windowWidth}
-      </div> */}
+      <input
+        type="number"
+        value={number}
+        onChange={(e) => setNumber(parseInt(e.target.value))}
+      />
+      <button onClick={() => setDark((prevDark) => !prevDark)}>
+        Change Theme
+      </button>
+      <div style={themeStyles}>{doubleNumber}</div>
     </>
   );
 }
 
-export default App;
+function slowFunction(num) {
+  // console.log("Calling Slow Function");
+  for (let i = 0; i <= 1000000000; i++) {}
+  return num * 2;
+}
