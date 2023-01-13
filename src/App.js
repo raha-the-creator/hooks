@@ -30,15 +30,20 @@ function reducer(todos, action) {
 
 function newToDo(name) {
   return { id: Date.now(), name: name, complete: false };
-}
+} // setting structure of data stored
 
 export default function App() {
-  const [todos, dispatch] = useReducer(reducer, []);
   const [name, setName] = useState("");
+  const [todos, dispatch] = useReducer(reducer, []); // state, dispatch - reducer, initial state
+
+  // The current state of this state variable, initially set to the initial state you provided.
+  // The dispatch function that lets you change state in response to interaction.
+
+  // dispatch => onClick, onChange, etc...
 
   function handleSubmit(e) {
-    e.preventDefault(); // prevents from reloading the page
-    dispatch({ type: ACTIONS.ADD_TODO, payload: { name: name } });
+    e.preventDefault();
+    dispatch({ type: ACTIONS.ADD_TODO, payload: { name: name } }); //payload is the piece of information that this action will add to the state
     setName("");
   }
 
